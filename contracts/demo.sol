@@ -6,14 +6,13 @@ contract EVCharge {
    struct EVUser {
        uint batteryStatus;
        string evID;
-       string chargeDetails;
        uint timestamp;
        string numberPlate;
        address payable userAddress;
    }
    
    // Mapping to store data of EV Users
-   mapping(address => EVUser) public evUsers;
+   mapping(address => EVUser) evUsers;
  
    function addEV(address payable _userAddress,uint _batteryStatus, string memory _evID, string memory _numberPlate) public {
        evUsers[_userAddress].userAddress = _userAddress;
@@ -22,9 +21,9 @@ contract EVCharge {
        evUsers[_userAddress].numberPlate= _numberPlate;
    }
 
-   function displayEVUser(address _evUser) public view returns (uint, string memory, string memory, uint, string memory) {
+   function displayEVUser(address _evUser) public view returns (uint, string memory, uint, string memory) {
        EVUser memory evUser = evUsers[_evUser];
-       return (evUser.batteryStatus, evUser.evID, evUser.chargeDetails, evUser.timestamp, evUser.numberPlate);
+       return (evUser.batteryStatus, evUser.evID, evUser.timestamp, evUser.numberPlate);
    }
 }
  

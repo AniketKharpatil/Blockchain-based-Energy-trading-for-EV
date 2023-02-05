@@ -10,16 +10,6 @@ export default [
 				"internalType": "uint256",
 				"name": "_batteryStatus",
 				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_evID",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_numberPlate",
-				"type": "string"
 			}
 		],
 		"name": "addEV",
@@ -41,21 +31,6 @@ export default [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -75,21 +50,6 @@ export default [
 				"internalType": "uint256",
 				"name": "batteryStatus",
 				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "evID",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "numberPlate",
-				"type": "string"
 			},
 			{
 				"internalType": "address payable",
