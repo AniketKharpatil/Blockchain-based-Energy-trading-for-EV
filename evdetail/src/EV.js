@@ -13,7 +13,7 @@ function App() {
   
 
   const handleAddEV = async () => {
-    const contractAddress ="0x7bcFbD775Af2D4Ffcca78d61734fCce8cA8B6DDB";
+    const contractAddress ="0xA55d89EF2a0e547Fb01C7dB0F60Bb9751b9E42e8";
     const contract = new web3.eth.Contract(abi, contractAddress);
     // 
     setContractInstance(contract);
