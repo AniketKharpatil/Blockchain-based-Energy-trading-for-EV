@@ -35,6 +35,11 @@ export default [
 				"type": "uint256"
 			},
 			{
+				"internalType": "uint256",
+				"name": "_capacity",
+				"type": "uint256"
+			},
+			{
 				"internalType": "string",
 				"name": "_evID",
 				"type": "string"
@@ -51,32 +56,28 @@ export default [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "rec",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_provider",
+				"internalType": "address payable",
+				"name": "_userAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "to",
 				"type": "address"
 			}
 		],
-		"name": "displayChargeProvider",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
+		"name": "transfer",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -95,6 +96,11 @@ export default [
 				"type": "uint256"
 			},
 			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
@@ -111,31 +117,6 @@ export default [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "rec",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [],
-		"stateMutability": "payable",
 		"type": "function"
 	}
 ];
