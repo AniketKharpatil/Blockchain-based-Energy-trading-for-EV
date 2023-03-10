@@ -5,4 +5,4 @@ demo.sol for EV.js
 work to be done on creating frontend for v2.sol
 
 
-This is no more the latest version..will be updated soon
+This is the latest version..
