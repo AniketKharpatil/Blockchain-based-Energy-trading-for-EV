@@ -1,72 +1,136 @@
-import React, { useState, useEffect } from 'react';
-import Web3 from 'web3';
-import abi from './abi'
-
-const web3 = new Web3('http://localhost:7545');
+import React, { useState } from "react";
+import Web3 from "web3";
+import abi from "./v5abi";
 
 function App() {
-  const [evUserAddress, setEvUserAddress] = useState('');
-  const [batteryStatus, setBatteryStatus] = useState('');
-  
-  const [contractInstance, setContractInstance] = useState(null);
-  const [evUserBatteryStatus, setEvUserBatteryStatus] = useState(null);
-  
+  const [web3, setWeb3] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [userAddress, setUserAddress] = useState("");
+  const [toAddress, setToAddress] = useState("");
+  const [status, setStatus] = useState("");
 
-  const handleAddEV = async () => {
-    const contractAddress ="0xA55d89EF2a0e547Fb01C7dB0F60Bb9751b9E42e8";
-    const contract = new web3.eth.Contract(abi, contractAddress);
-    // 
-    setContractInstance(contract);
-    // 
-    const accounts = await web3.eth.getAccounts();
+  const [displayevID, setEvUserID] = useState("");
+  const [displaynumberPlate, setEvUsernumberPlate] = useState("");
+  const [displayTime, setEvUserTime] = useState("");
+  const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
+  const [disCapacity, setEvUserCapacity] = useState(null);
 
-
-    await contract.methods.addEV(evUserAddress, batteryStatus)
-    .send({ from: accounts[0] });
-    
+  const addr="0x37542eF20dfcD170786d8b4Dd1290CCFF474C484";
+  // Connect to Web3 and instantiate the contract
+  const connectWeb3 = async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.enable();
+        const web3 = new Web3(window.ethereum);
+        const contract = new web3.eth.Contract(
+          abi,addr
+        );
+        setWeb3(web3);
+        setContract(contract);
+        setStatus("Connected to Web3.");
+      } catch (error) {
+        console.error(error);
+        setStatus("Failed to connect to Web3.");
+      }
+    } else {
+      setStatus("Please install MetaMask to use this dApp.");
+    }
   };
 
-  const handleDisplay=async(event)=>{
-    event.preventDefault();
-    const batteryStatus = await contractInstance.methods
-      .displayEVUser(evUserAddress)
-      .call();
-    
-    setEvUserBatteryStatus(batteryStatus);
-  }
+  // Add an EV user to the contract
+  const addEVUser = async () => {
+    try {
+      await contract.methods
+        .addEV(
+          userAddress,
+          50, // default battery status
+          100, // default capacity
+          "EV001", // default EV ID
+          "ABC-123" // default number plate
+        )
+        .send({ from: userAddress });
+      setStatus("Added EV user successfully.");
+    } catch (error) {
+      console.error(error);
+      setStatus("Failed to add EV user.");
+    }
+  };
+
+  // Transfer funds to charge an EV
+  const chargeEV = async () => {
+    try {
+      const evUser = await contract.methods.displayEVUser(userAddress).call();
+      const toCharge = evUser.capacity - evUser.batteryStatus;
+      const amt = toCharge * 1; // cost per unit
+      const flag = web3.utils.toBN(web3.eth.getBalance(userAddress)).gte(web3.utils.toBN(amt));
+      if (flag) {
+        await contract.methods.transfer(userAddress, toAddress).send({ from: userAddress, value: amt });
+        setStatus("Charged EV successfully.");
+      } else {
+        setStatus("Insufficient balance.");
+      }
+    } catch (error) {
+      console.error(error);
+      setStatus("Failed to charge EV.");
+    }
+  };
+
+  const disEv=async()=>{
+    const evresult = await contract.methods.displayEVUser(userAddress).call();
+    setEvUserBatteryStatus(evresult[0]);
+    setEvUserCapacity(evresult[1])
+    setEvUserID(evresult[2]);
+    setEvUserTime(evresult[3]);
+    setEvUsernumberPlate(evresult[4]);
+  };
 
   return (
     <div>
-      <div><p>Input EV User data :</p>
-        <input
-          type="text"
-          placeholder="Enter EV User Address"
-          value={evUserAddress}
-          onChange={(e) => setEvUserAddress(e.target.value)}
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Enter Battery Status"
-          value={batteryStatus}
-          onChange={(e) => setBatteryStatus(e.target.value)}
-        />
-      </div>
-      <button onClick={handleAddEV}>Add EV</button>
-      
-      <form onSubmit={handleDisplay}>
-        <input
-          type="text"
-          value={evUserAddress}
-          onChange={(e) => setEvUserAddress(e.target.value)}
-          placeholder="Enter EV User Address"
-        />
-        <button type="submit">Display EV User</button>
-      </form>
-      {evUserBatteryStatus && (
-        <p>Battery Status: {evUserBatteryStatus}</p>
+    <div>
+      <h1>EV Charging Station</h1>
+      <p>{status}</p>
+      {web3 === null ? (
+        <button onClick={connectWeb3}>Connect to Web3</button>
+      ) : (
+        <>
+          <p>Connected account: {userAddress}</p>
+          <p>
+            <label>Account:</label>
+            <input type="text" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
+          </p>
+          <p>
+            <button onClick={addEVUser}>Add EV user</button>
+          </p>
+          <p>
+            <label>To:</label>
+            <input type="text" value={toAddress} onChange={(e) => setToAddress(e.target.value)} />
+          </p>
+          <p>
+            <button onClick={chargeEV}>Charge EV</button>
+          </p>
+          <br></br>
+{/* for displaying EV details */}
+          <p>
+            <label>Enter the address</label>
+            <input type="text" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
+          </p>
+          <p>
+            <button onClick={disEv}>Display EV details</button>
+            <div >
+                EV ID: {displayevID}
+                <br />
+                Timestamp: {displayTime}
+                <br />
+                EV Battery status: {displayBatteryStatus}
+                <br />
+                Number Plate: {displaynumberPlate}
+                <br />
+                Capacity: {disCapacity}
+        </div>
+          </p>
+        </>
       )}
+    </div>
     </div>
   );
 }
