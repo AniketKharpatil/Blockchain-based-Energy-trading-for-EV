@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Web3 from "web3";
-import abi from "./v5abi";
+import abi from "./EVabi";
 
 function App() {
   const [web3, setWeb3] = useState(null);
