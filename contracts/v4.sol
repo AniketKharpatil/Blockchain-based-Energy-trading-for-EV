@@ -13,16 +13,15 @@ contract EVCharge {
    }
    // Charge Provider Struct
    struct ChargeProvider {
-       uint chargeAmount;
-       uint timestamp;
-       uint cost;
+       uint rate;
        address payable providerAddress;
    }
+   
+   ChargeProvider cp;
 
    // Mapping to store data of EV Users
    mapping(address => EVUser) evUsers;
-   // Mapping to store data of Charge Providers
-   mapping(address => ChargeProvider) chargeProviders;
+   
  
    function addEV(address payable _userAddress,uint _batteryStatus, uint _capacity, string memory _evID, string memory _numberPlate) public {
        evUsers[_userAddress].userAddress = _userAddress;
@@ -36,27 +35,23 @@ contract EVCharge {
        EVUser memory evUser = evUsers[_evUser];
        return (evUser.batteryStatus, evUser.capacity, evUser.evID, evUser.timestamp, evUser.numberPlate);
    }
-   function addChargeProvider(address payable _providerAddress,uint _chargeAmount, uint _cost) public {
-       chargeProviders[_providerAddress].providerAddress=_providerAddress;
-       chargeProviders[_providerAddress].chargeAmount=_chargeAmount;
-       chargeProviders[_providerAddress].cost=_cost;
-   }
-   function displayChargeProvider(address _provider) public view returns (uint, uint, uint) {
-       ChargeProvider memory chargeProvider = chargeProviders[_provider];
-       return (chargeProvider.chargeAmount, chargeProvider.timestamp, chargeProvider.cost);
-   }
-   function rec() public payable{
+
+   function addChargeProvider(address payable _providerAddress,uint _rate) public {
+       cp.providerAddress=_providerAddress;
+       cp.rate=_rate;
    }
 
-   uint256 cost=1;
+   function rec() public payable{
+   }
    
-    function transfer(address payable _userAddress,address payable to) public payable {
+    function transfer(address payable _userAddress) public payable {
         uint to_charge = evUsers[_userAddress].capacity-evUsers[_userAddress].batteryStatus;
-        uint amt=to_charge*cost;
+        uint amt=to_charge*cp.rate;
         bool flag=false;
         if(_userAddress.balance>=amt){
             flag=true;
         }
+        address payable to=cp.providerAddress;
         to.transfer(amt);
         if(flag){
             evUsers[_userAddress].batteryStatus+=to_charge;
