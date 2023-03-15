@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Web3 from "web3";
 import abi from "./EVabi";
+import "./style.css";
 
 function App() {
   const [web3, setWeb3] = useState(null);
@@ -15,7 +16,7 @@ function App() {
   const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
   const [disCapacity, setEvUserCapacity] = useState(null);
 
-  const addr="0x37542eF20dfcD170786d8b4Dd1290CCFF474C484";
+  const addr="0xDcdCD59F9086231efF910f4E49E64226CF0c9A9E";
   // Connect to Web3 and instantiate the contract
   const connectWeb3 = async () => {
     if (window.ethereum) {
@@ -52,36 +53,55 @@ function App() {
       setStatus("Added EV user successfully.");
     } catch (error) {
       console.error(error);
-      setStatus("Failed to add EV user.");
+      setStatus("Failed to Register EV user.");
     }
   };
 
-  // Transfer funds to charge an EV
   const chargeEV = async () => {
     try {
-      const evUser = await contract.methods.displayEVUser(userAddress).call();
-      const toCharge = evUser.capacity - evUser.batteryStatus;
-      const amt = toCharge * 1; // cost per unit
-      const flag = web3.utils.toBN(web3.eth.getBalance(userAddress)).gte(web3.utils.toBN(amt));
-      if (flag) {
-        await contract.methods.transfer(userAddress, toAddress).send({ from: userAddress, value: amt });
-        setStatus("Charged EV successfully.");
-      } else {
-        setStatus("Insufficient balance.");
-      }
+      const accounts = await web3.eth.getAccounts();
+      
+      const result = await contract.methods.transfer(userAddress).send({
+        from: accounts[0],
+        value: web3.utils.toWei("1", "ether"), // Replace with the amount you want to transfer
+      });
+      console.log(result);
+      
     } catch (error) {
       console.error(error);
       setStatus("Failed to charge EV.");
     }
   };
+  // const chargeEV = async () => {
+  //   try {
+  //     // const evUser = await contract.methods.displayEVUser(userAddress).call();
+  //     const toCharge = evUser.capacity - evUser.batteryStatus;
+  //     const amt = toCharge * 1; // cost per unit
+  //     const flag = web3.utils.toBN(web3.eth.getBalance(userAddress)).gte(web3.utils.toBN(amt));
+  //     if (flag) {
+  //       await contract.methods.transfer(userAddress, toAddress).send({ from: userAddress, value: amt });
+  //       setStatus("Charged EV successfully.");
+  //     } else {
+  //       setStatus("Insufficient balance.");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     setStatus("Failed to charge EV.");
+  //   }
+  // };
+
 
   const disEv=async()=>{
-    const evresult = await contract.methods.displayEVUser(userAddress).call();
+   try { const evresult=await contract.methods.displayEVUser(userAddress).call();
     setEvUserBatteryStatus(evresult[0]);
     setEvUserCapacity(evresult[1])
     setEvUserID(evresult[2]);
     setEvUserTime(evresult[3]);
-    setEvUsernumberPlate(evresult[4]);
+    setEvUsernumberPlate(evresult[4]);}
+    catch (error) {
+      console.error(error);
+      setStatus("Failed to display.");
+    }
   };
 
   return (
@@ -98,8 +118,10 @@ function App() {
             <label>Account:</label>
             <input type="text" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
           </p>
-          <p>
-            <button onClick={addEVUser}>Add EV user</button>
+          <p><h1>
+
+          <button onClick={addEVUser}>Register EV user</button>
+          </h1>
           </p>
           <p>
             <label>To:</label>
