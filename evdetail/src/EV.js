@@ -7,7 +7,7 @@ function App() {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [userAddress, setUserAddress] = useState("");
-  const [toAddress, setToAddress] = useState("");
+  // const [toAddress, setToAddress] = useState("");
   const [status, setStatus] = useState("");
 
   const [displayevID, setEvUserID] = useState("");
@@ -16,7 +16,7 @@ function App() {
   const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
   const [disCapacity, setEvUserCapacity] = useState(null);
 
-  const addr="0xDcdCD59F9086231efF910f4E49E64226CF0c9A9E";
+  const addr="0x74389C6A9d1db11caE0eb512F171af3aa03B39a0";
   // Connect to Web3 and instantiate the contract
   const connectWeb3 = async () => {
     if (window.ethereum) {
@@ -28,10 +28,14 @@ function App() {
         );
         setWeb3(web3);
         setContract(contract);
-        setStatus("Connected to Web3.");
+        
+        alert("Connected to Web3");
+        setStatus("Connected to Web3");
       } catch (error) {
         console.error(error);
+        alert("Failed to Connect to Web3");
         setStatus("Failed to connect to Web3.");
+        
       }
     } else {
       setStatus("Please install MetaMask to use this dApp.");
@@ -66,30 +70,13 @@ function App() {
         value: web3.utils.toWei("1", "ether"), // Replace with the amount you want to transfer
       });
       console.log(result);
-      
+      alert("Transaction successful!!! Your EV is charging");
     } catch (error) {
       console.error(error);
-      setStatus("Failed to charge EV.");
+      alert("Error! Transaction failed !!");
     }
   };
-  // const chargeEV = async () => {
-  //   try {
-  //     // const evUser = await contract.methods.displayEVUser(userAddress).call();
-  //     const toCharge = evUser.capacity - evUser.batteryStatus;
-  //     const amt = toCharge * 1; // cost per unit
-  //     const flag = web3.utils.toBN(web3.eth.getBalance(userAddress)).gte(web3.utils.toBN(amt));
-  //     if (flag) {
-  //       await contract.methods.transfer(userAddress, toAddress).send({ from: userAddress, value: amt });
-  //       setStatus("Charged EV successfully.");
-  //     } else {
-  //       setStatus("Insufficient balance.");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     setStatus("Failed to charge EV.");
-  //   }
-  // };
-
+  
 
   const disEv=async()=>{
    try { const evresult=await contract.methods.displayEVUser(userAddress).call();
@@ -105,8 +92,7 @@ function App() {
   };
 
   return (
-    <div>
-    <div>
+    <div class="frame">
       <h1>EV Charging Station</h1>
       <p>{status}</p>
       {web3 === null ? (
@@ -123,22 +109,25 @@ function App() {
           <button onClick={addEVUser}>Register EV user</button>
           </h1>
           </p>
-          <p>
+
+          {/* <p>
             <label>To:</label>
-            <input type="text" value={toAddress} onChange={(e) => setToAddress(e.target.value)} />
-          </p>
+            <input type="text" value={userAddress} onChange={(e) => setToAddress(e.target.value)} />
+          </p> */}
+
           <p>
             <button onClick={chargeEV}>Charge EV</button>
           </p>
           <br></br>
-{/* for displaying EV details */}
+
+
           <p>
             <label>Enter the address</label>
             <input type="text" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
           </p>
           <p>
             <button onClick={disEv}>Display EV details</button>
-            <div >
+            <div class="inputfield" >
                 EV ID: {displayevID}
                 <br />
                 Timestamp: {displayTime}
@@ -152,7 +141,6 @@ function App() {
           </p>
         </>
       )}
-    </div>
     </div>
   );
 }

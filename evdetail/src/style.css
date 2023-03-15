@@ -7,9 +7,9 @@
 }
 
 .frame {
-  background-color: lightblue;
-  margin: 20px;
- padding: 10px;
+  background-color: rgb(147, 120, 196);
+  margin: 80px;
+ padding: 30px;
  text-align: justify;
 }
 .details{
