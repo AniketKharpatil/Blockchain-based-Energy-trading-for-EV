@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Web3 from "web3";
+// import CircularProgress from '@mui/material/CircularProgress';
 import abi from "./EVabi";
 import "./style.css";
 
@@ -58,6 +59,8 @@ function App() {
     } catch (error) {
       console.error(error);
       setStatus("Failed to Register EV user.");
+      
+      alert("Error! Failed to Register EV user");
     }
   };
 
@@ -67,7 +70,7 @@ function App() {
       
       const result = await contract.methods.transfer(userAddress).send({
         from: accounts[0],
-        value: web3.utils.toWei("1", "ether"), // Replace with the amount you want to transfer
+        value: web3.utils.toWei("0.000001", "ether"), // Replace with the amount you want to transfer
       });
       console.log(result);
       alert("Transaction successful!!! Your EV is charging");
@@ -87,7 +90,8 @@ function App() {
     setEvUsernumberPlate(evresult[4]);}
     catch (error) {
       console.error(error);
-      setStatus("Failed to display.");
+      setStatus("Failed to display");
+      alert("Error!  Enter correct address !!");
     }
   };
 
@@ -104,11 +108,10 @@ function App() {
             <label>Account:</label>
             <input type="text" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
           </p>
+          
           <p><h1>
-
           <button onClick={addEVUser}>Register EV user</button>
-          </h1>
-          </p>
+          </h1></p>
 
           {/* <p>
             <label>To:</label>
