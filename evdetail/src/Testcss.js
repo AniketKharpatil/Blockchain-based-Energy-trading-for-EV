@@ -3,14 +3,16 @@ import Web3 from "web3";
 // import CircularProgress from '@mui/material/CircularProgress';
 import abi from "./EVabi";
 import "./style.css";
-import bat from "./battery";
+
 
 function App() {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [userAddress, setUserAddress] = useState("");
-  // const [toAddress, setToAddress] = useState("");
+  const [chargeAmt, setcharge] = useState("");
   const [status, setStatus] = useState("");
+
+  const[rate,setRATE]=useState("");
 
   const [displayevID, setEvUserID] = useState("");
   const [displaynumberPlate, setEvUsernumberPlate] = useState("");
@@ -18,7 +20,7 @@ function App() {
   const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
   const [disCapacity, setEvUserCapacity] = useState(null);
 
-  const addr="0x92d9831c6d77806A543aA41CC21B9124Ed539C23";
+  const addr="0x69f9EA32159c8fC5294Ad7F27e58692bE25Bd98b";
   // Connect to Web3 and instantiate the contract
   const connectWeb3 = async () => {
     if (window.ethereum) {
@@ -44,8 +46,14 @@ function App() {
     }
   };
 
+  const getRate=async()=>{
+    const pvresult=await contract.methods.getRate().call();
+    setRATE(pvresult[0]);
+  };
+
   // Add an EV user to the contract
   const addEVUser = async () => {
+    const timestamp = Date.now();
     try {
       await contract.methods
         .addEV(
@@ -67,19 +75,22 @@ function App() {
 
   const chargeEV = async () => {
     try {
-      const accounts = await web3.eth.getAccounts();
-      
-      const result = await contract.methods.transfer(userAddress).send({
-        from: accounts[0],
-        value: web3.utils.toWei("0.000001", "ether"), // Replace with the amount you want to transfer
-      });
-      console.log(result);
-      alert("Transaction successful!!! Your EV is charging");
-      bat();
+        getRate();
+        const accounts = await web3.eth.getAccounts();
+        if(chargeAmt<displayBatteryStatus)
+            alert("Enter greater charge value !!");
+            const result = await contract.methods.transfer(chargeAmt,userAddress).send({
+            from: accounts[0],
+            value: web3.utils.toWei((rate*(chargeAmt-displayBatteryStatus)).toString(),"gwei"), // Replace with the amount you want to transfer
+            });
+        console.log(result);
+        
+        alert("Transaction successful!!! Your EV is charging");
     } catch (error) {
       console.error(error);
       alert("Error! Transaction failed !!");
     }
+
   };
   
 
@@ -116,10 +127,10 @@ function App() {
           <button onClick={addEVUser}>Register EV user</button>
           </h1></p>
 
-          {/* <p>
-            <label>To:</label>
-            <input type="text" value={userAddress} onChange={(e) => setToAddress(e.target.value)} />
-          </p> */}
+          <p>
+            <label>Enter how much to charge:</label>
+            <input type="text" value={chargeAmt} onChange={(e) => setcharge(e.target.value)} />
+          </p>
 
           <p>
             <button onClick={chargeEV}>Charge EV</button>
