@@ -42,6 +42,7 @@ function App() {
         
       }
     } else {
+       alert("Please install MetaMask to use this dApp");
       setStatus("Please install MetaMask to use this dApp.");
     }
   };
@@ -78,16 +79,17 @@ function App() {
         getRate();
         const accounts = await web3.eth.getAccounts();
         if(chargeAmt<displayBatteryStatus)
-            alert("Enter greater charge value !!");
+            {alert("Enter greater charge value !!");}
+        else{
             const result = await contract.methods.transfer(chargeAmt,userAddress).send({
             from: accounts[0],
             value: web3.utils.toWei((rate*(chargeAmt-displayBatteryStatus)).toString(),"gwei"), // Replace with the amount you want to transfer
             });
         console.log(result);
-        
         alert("Transaction successful!!! Your EV is charging");
+        
+        }
     } catch (error) {
-      console.error(error);
       alert("Error! Transaction failed !!");
     }
 
