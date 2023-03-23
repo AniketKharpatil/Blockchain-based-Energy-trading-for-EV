@@ -5,7 +5,7 @@ import abi from "./EVabi";
 import "./style.css";
 
 
-function App() {
+function EV() {
   const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [userAddress, setUserAddress] = useState("");
@@ -20,7 +20,7 @@ function App() {
   const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
   const [disCapacity, setEvUserCapacity] = useState(null);
 
-  const addr="0x69f9EA32159c8fC5294Ad7F27e58692bE25Bd98b";
+  const addr="0x22dBDB21d31C67e596CbC16e6774C62D70A4ebC3";
   // Connect to Web3 and instantiate the contract
   const connectWeb3 = async () => {
     if (window.ethereum) {
@@ -164,4 +164,4 @@ function App() {
   );
 }
 
-export default App;
+export default EV;

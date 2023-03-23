@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Test from  "./Testcss";
+import EV from "./EVapp"
 import Load from './Loading';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Test/>
+    <Load initialCount={10}/>
   </React.StrictMode>
 );
 
