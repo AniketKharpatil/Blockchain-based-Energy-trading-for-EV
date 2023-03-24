@@ -1,12 +1,16 @@
 import React, { useEffect, useState,useRef } from "react";
 import "./battery.css";
+import { useSearchParams } from "react-router-dom";
 
-function Load (props) {
-    const [count, setCount] = useState(props.initialCount);
+function Load () {
+  const [searchParams] = useSearchParams();
+  const value1 = searchParams.get("value1");
+  const value2 = searchParams.get("value2");
+  const [count,setCount]=useState(parseInt(value1));
 
     useEffect(() => {
       const interval = setInterval(() => {
-       if(count<95) setCount(count => count + 1);
+       if(count<parseInt(value2)) setCount(count => count + 1);
       }, 1000);
       return () => clearInterval(interval);},
       );
