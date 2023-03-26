@@ -10,7 +10,8 @@ function Load () {
 
     useEffect(() => {
       const interval = setInterval(() => {
-       if(count<parseInt(value2)) setCount(count => count + 1);
+       if(count<parseInt(value2)) 
+       setCount(count => count + 1);
       }, 1000);
       return () => clearInterval(interval);},
       );

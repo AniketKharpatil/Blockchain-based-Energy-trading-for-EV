@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Web3 from "web3";
-// import "./ev.css"
 import abi from "./EVabi";
-import "./style.css";
+import "./ev.css";
 
 
 function EV() {
@@ -12,7 +11,7 @@ function EV() {
   const [contract, setContract] = useState(null);
   const [userAddress, setUserAddress] = useState("");
   const [chargeAmt, setcharge] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("Not connected to Web3");
   const[rate,setRATE]=useState("");
 
   const [displayevID, setEvUserID] = useState("");
@@ -21,7 +20,7 @@ function EV() {
   const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
   const [disCapacity, setEvUserCapacity] = useState(null);
 
-  const addr="0x10642AE67b788769d86916a21ad1A3B7Aa30090C";
+  const addr="0x3016726f57Fc889166b08CedC62488AF0A83b82B";
 
   // Connect to Web3 and instantiate the contract
 
@@ -48,14 +47,13 @@ function EV() {
     }
   };
 
-  const getRate=async()=>{
-    const pvresult=await contract.methods.getRate().call();
+  let getRate=async()=>{
+    let pvresult=await contract.methods.getRate().call();
     setRATE(pvresult[0]);
   };
 
   // Add an EV user to the contract
   const addEVUser = async () => {
-    const timestamp = Date.now();
     try {
       await contract.methods
         .addEV(
@@ -68,7 +66,6 @@ function EV() {
         .send({ from: userAddress });
       setStatus("Added EV user successfully.");
     } catch (error) {
-      console.error(error);
       setStatus("Failed to Register EV user.");
       alert("Error: Failed to Register EV user");
     }
@@ -114,9 +111,10 @@ function EV() {
   };
 
   return (
-    <div class="frame">
-      <h1>EV Charging Station</h1>
-      <p><b>Status:</b>{status}</p>
+    <div class="container">
+       <h2>EV Charging<span> Station</span> </h2>
+      <br></br>
+      <p><b>Status: &nbsp;  </b>{status}</p>
       <br></br>
 
 
