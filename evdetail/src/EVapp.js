@@ -21,7 +21,7 @@ function EV() {
   const [displayBatteryStatus, setEvUserBatteryStatus] = useState("");
   const [disCapacity, setEvUserCapacity] = useState(null);
 
-  const addr="0xBE3376AadBab08De96366124b6f6EE34f584ac39";
+  const addr="0x10642AE67b788769d86916a21ad1A3B7Aa30090C";
 
   // Connect to Web3 and instantiate the contract
 
@@ -79,12 +79,13 @@ function EV() {
         getRate();
         const accounts = await web3.eth.getAccounts();
         if(chargeAmt<displayBatteryStatus)
-            {alert("Enter greater charge value !!");
+            {alert("Enter appropriate charge value !!");
           }
         else{
             const result = await contract.methods.transfer(chargeAmt,userAddress).send({
             from: accounts[0],
-            value: web3.utils.toWei((rate*(chargeAmt-displayBatteryStatus)).toString(),"ethers"), // Replace with the amount you want to transfer
+            value: web3.utils.toWei((rate*(chargeAmt-displayBatteryStatus)).toString(),"ether"), 
+            // Replace with the amount you want to transfer
             });
         console.log(result);
         alert("Transaction successful!!! Your EV is charging");
